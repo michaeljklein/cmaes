@@ -14,6 +14,7 @@ use weights::{FinalWeights, InitialWeights};
 
 /// Parameters of the termination criteria
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub(crate) struct TerminationParameters {
     /// Value for the MaxFunctionEvals termination criterion (disabled if `None`)
     pub max_function_evals: Option<usize>,
@@ -67,6 +68,7 @@ impl TerminationParameters {
 /// Stores constant parameters and options for the algorithm. Obtained by calling
 /// [`CMAES::parameters`][crate::CMAES::parameters].
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Parameters {
     /// Optimization mode
     mode: Mode,

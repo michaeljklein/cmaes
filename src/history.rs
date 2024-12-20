@@ -11,6 +11,7 @@ pub const MAX_HISTORY_LENGTH: usize = 20_000;
 
 /// A type that tracks various histories of the objective function value, as well as the current
 /// and overall best points.
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct History {
     /// A history of the best function values (values at the front are from more recent generations)
     best_function_values: VecDeque<f64>,

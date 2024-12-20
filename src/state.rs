@@ -8,6 +8,7 @@ use crate::sampling::EvaluatedPoint;
 use rayon::prelude::*;
 
 /// Stores the variable state of the algorithm and handles updating it
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct State {
     /// The number of generations that have been fully completed
     generation: usize,

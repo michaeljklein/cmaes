@@ -15,6 +15,8 @@ openblas   = ["nalgebra-lapack/openblas"]
 netlib     = ["nalgebra-lapack/netlib"]
 accelerate = ["nalgebra-lapack/accelerate"]
 intel-mkl  = ["nalgebra-lapack/intel-mkl"]
+# For serde support: expected to be unstable across versions
+serde      = ["nalgebra/serde-serialize", "serde/derive"]
 
 [dependencies]
 rand = "0.8.5"
@@ -33,6 +35,10 @@ version = "0.3.1"
 optional = true
 default-features = false
 features = [ "ttf", "bitmap_backend", "bitmap_encoder", "line_series" ]
+
+[dependencies.serde]
+version = "1.0.216"
+optional = true
 
 [dev-dependencies]
 assert_approx_eq = "1.1"

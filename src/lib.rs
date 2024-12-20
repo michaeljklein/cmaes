@@ -142,9 +142,12 @@ use crate::plotting::Plot;
 use crate::sampling::{EvaluatedPoint, InvalidFunctionValueError, Sampler};
 use crate::state::State;
 use crate::termination::TerminationCheck;
+#[cfg(feature = "serde")]
+use crate::utils::approx_instant;
 
 /// An individual point with its corresponding objective function value.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Individual {
     pub point: DVector<f64>,
     pub value: f64,
@@ -200,6 +203,7 @@ pub struct TerminationData {
 ///     .unwrap();
 /// let container = Container(cmaes_state);
 /// ```
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct CMAES<F> {
     /// Point sampler/evaluator
     sampler: Sampler<F>,
@@ -218,6 +222,7 @@ pub struct CMAES<F> {
     /// The last time [`CMAES::print_info`] was called, in function evaluations
     last_print_evals: usize,
     /// The time at which the `CMAES` was created
+    #[cfg_attr(feature = "serde", serde(with = "approx_instant"))]
     time_created: Instant,
 }
 

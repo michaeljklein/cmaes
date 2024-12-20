@@ -6,6 +6,7 @@ use std::ops::Deref;
 
 /// The distribution of weights for the population. The default value is `Negative`.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Weights {
     /// Weights are higher for higher-ranked selected individuals and are zero for the rest of the
     /// population. Usually performs slightly worse than `Negative`.
@@ -136,6 +137,7 @@ impl InitialWeights {
 
 /// Final distribution of weights, after normalization
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct FinalWeights {
     weights: DVector<f64>,
     setting: Weights,

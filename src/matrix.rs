@@ -7,6 +7,7 @@ pub type SquareMatrix<T> = nalgebra::SquareMatrix<T, Dyn, VecStorage<T, Dyn, Dyn
 
 /// A symmetric square matrix that stores and updates its eigendecomposition and inverse square root
 /// (`C^(-1/2)`)
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct CovarianceMatrix {
     /// Covariance matrix
     cov: SquareMatrix<f64>,

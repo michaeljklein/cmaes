@@ -10,14 +10,18 @@ use statrs::distribution::Normal;
 use crate::mode::Mode;
 use crate::state::State;
 use crate::{ObjectiveFunction, ParallelObjectiveFunction};
+#[cfg(feature = "serde")]
+use crate::utils::cha_cha_12_rng_as_seed;
 
 /// A type for sampling and evaluating points from the distribution for each generation
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Sampler<F> {
     /// Number of dimensions to sample from
     dim: usize,
     /// Number of points to sample each generation
     population_size: usize,
     /// RNG from which all random numbers are sourced
+    #[cfg_attr(feature = "serde", serde(with = "cha_cha_12_rng_as_seed"))]
     rng: ChaCha12Rng,
     /// The objective function to optimize, used to evaluate points
     objective_function: F,

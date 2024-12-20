@@ -2,6 +2,7 @@
 
 /// Configuration of the data plot.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct PlotOptions {
     /// Minimum function evaluations between each data point. Can be used to adjust the granularity
     /// of the recorded data points, with `0` recording a data point every generation.

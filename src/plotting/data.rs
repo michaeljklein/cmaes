@@ -7,6 +7,7 @@ use crate::utils::partial_cmp;
 
 /// Data points for the plot.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct PlotData {
     /// Function evals at which other data points were recorded
     function_evals: Vec<usize>,

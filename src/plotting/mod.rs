@@ -71,6 +71,7 @@ pub const PLOT_WIDTH: u32 = 1200;
 ///         width=750 height=750 />
 /// </a>
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Plot {
     data: PlotData,
     options: PlotOptions,

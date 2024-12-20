@@ -7,6 +7,7 @@ use crate::utils;
 /// The mode to use when optimizing a function.
 ///
 /// The default value is `Minimize`.
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Mode {
     /// Minimize the value of the function.

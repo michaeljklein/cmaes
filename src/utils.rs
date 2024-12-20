@@ -53,6 +53,64 @@ pub fn range<I: IntoIterator<Item = f64>>(iter: I) -> Option<f64> {
     Some(max - min)
 }
 
+// Method to (de)serialize Instant's from
+// https://github.com/serde-rs/serde/issues/1375#issuecomment-419688068
+#[cfg(feature = "serde")]
+pub mod approx_instant {
+    use serde::{Serialize, Serializer, Deserialize, Deserializer, de::Error};
+    use std::time::{Instant, SystemTime};
+
+    pub fn serialize<S>(instant: &Instant, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let system_now = SystemTime::now();
+        let instant_now = Instant::now();
+        let approx = system_now - (instant_now - *instant);
+        approx.serialize(serializer)
+    }
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<Instant, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let de = SystemTime::deserialize(deserializer)?;
+        let system_now = SystemTime::now();
+        let instant_now = Instant::now();
+        let duration = system_now.duration_since(de).map_err(Error::custom)?;
+        let approx = instant_now - duration;
+        Ok(approx)
+    }
+}
+
+// Method to (de)serialize ChaCha12Rng's
+// NOTE: serializing and deserializing is _NOT_ expected to produce the same value!
+#[cfg(feature = "serde")]
+pub mod cha_cha_12_rng_as_seed {
+    use rand::{RngCore, SeedableRng};
+    use rand_chacha::ChaCha12Rng;
+    use serde::{Serialize, Serializer, Deserialize, Deserializer};
+
+    // Use next 32 bytes to re-seed
+    pub fn serialize<S>(rng: &ChaCha12Rng, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut rng = rng.clone();
+        let mut seed: [u8; 32] = Default::default();
+        rng.fill_bytes(&mut seed);
+        seed.serialize(serializer)
+    }
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<ChaCha12Rng, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let seed = <[u8; 32]>::deserialize(deserializer)?;
+        Ok(ChaCha12Rng::from_seed(seed))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
