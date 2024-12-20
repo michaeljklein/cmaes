@@ -642,13 +642,13 @@ impl<F: ObjectiveFunction> CMAES<F> {
 
 impl<F> CMAES<F> {
     /// Comsumes `self` and updates the objective function
-    pub fn set_objective_function<G>(self, objective_function: G) -> CMAES<G> {
+    pub fn set_objective_function<G>(&self, objective_function: G) -> CMAES<G> {
         let sampler = self.sampler.set_objective_function(objective_function);
-        let parameters = self.parameters;
-        let state = self.state;
-        let history = self.history;
+        let parameters = self.parameters.clone();
+        let state = self.state.clone();
+        let history = self.history.clone();
         #[cfg(feature = "plotters")]
-        let plot = self.plot;
+        let plot = self.plot.clone();
         let print_gap_evals = self.print_gap_evals;
         let last_print_evals = self.last_print_evals;
         let time_created = self.time_created;

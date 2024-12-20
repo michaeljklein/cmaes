@@ -87,10 +87,10 @@ impl<F> Sampler<F> {
     }
 
     /// Consumes `self` and update the objective function
-    pub fn set_objective_function<G>(self, objective_function: G) -> Sampler<G> {
+    pub fn set_objective_function<G>(&self, objective_function: G) -> Sampler<G> {
         let dim = self.dim;
         let population_size = self.population_size;
-        let rng = self.rng;
+        let rng = self.rng.clone();
         let function_evals = self.function_evals;
         Sampler {
             dim,
