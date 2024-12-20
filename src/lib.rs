@@ -619,6 +619,28 @@ impl<F: ObjectiveFunction> CMAES<F> {
         Ok(individuals)
     }
 
+    /// Advances to the next generation. Returns `Some` if a termination condition has been reached
+    /// and the algorithm should be stopped. [`run`][Self::run] is generally easier to use, but
+    /// iteration can be performed manually if finer control is needed (plotting/printing the final
+    /// state must be done manually as well in this case).
+    #[allow(clippy::should_implement_trait)]
+    #[must_use]
+    pub fn next(&mut self) -> Option<TerminationData> {
+        // Sample individuals
+        let individuals = match self.sample() {
+            Ok(x) => x,
+            Err(_) => {
+                return Some(
+                    self.get_termination_data(vec![TerminationReason::InvalidFunctionValue]),
+                );
+            }
+        };
+
+        self.next_internal(&individuals)
+    }
+}
+
+impl<F> CMAES<F> {
     /// Comsumes `self` and updates the objective function
     pub fn set_objective_function<G>(self, objective_function: G) -> CMAES<G> {
         let sampler = self.sampler.set_objective_function(objective_function);
@@ -641,26 +663,6 @@ impl<F: ObjectiveFunction> CMAES<F> {
             last_print_evals,
             time_created,
         }
-    }
-
-    /// Advances to the next generation. Returns `Some` if a termination condition has been reached
-    /// and the algorithm should be stopped. [`run`][Self::run] is generally easier to use, but
-    /// iteration can be performed manually if finer control is needed (plotting/printing the final
-    /// state must be done manually as well in this case).
-    #[allow(clippy::should_implement_trait)]
-    #[must_use]
-    pub fn next(&mut self) -> Option<TerminationData> {
-        // Sample individuals
-        let individuals = match self.sample() {
-            Ok(x) => x,
-            Err(_) => {
-                return Some(
-                    self.get_termination_data(vec![TerminationReason::InvalidFunctionValue]),
-                );
-            }
-        };
-
-        self.next_internal(&individuals)
     }
 }
 
