@@ -619,6 +619,30 @@ impl<F: ObjectiveFunction> CMAES<F> {
         Ok(individuals)
     }
 
+    /// Comsumes `self` and updates the objective function
+    pub fn set_objective_function<G>(self, objective_function: G) -> CMAES<G> {
+        let sampler = self.sampler.set_objective_function(objective_function);
+        let parameters = self.parameters;
+        let state = self.state;
+        let history = self.history;
+        #[cfg(feature = "plotters")]
+        let plot = self.plot;
+        let print_gap_evals = self.print_gap_evals;
+        let last_print_evals = self.last_print_evals;
+        let time_created = self.time_created;
+        CMAES {
+            sampler,
+            parameters,
+            state,
+            history,
+            #[cfg(feature = "plotters")]
+            plot,
+            print_gap_evals,
+            last_print_evals,
+            time_created,
+        }
+    }
+
     /// Advances to the next generation. Returns `Some` if a termination condition has been reached
     /// and the algorithm should be stopped. [`run`][Self::run] is generally easier to use, but
     /// iteration can be performed manually if finer control is needed (plotting/printing the final

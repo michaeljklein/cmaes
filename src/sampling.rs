@@ -85,6 +85,21 @@ impl<F> Sampler<F> {
     pub fn into_objective_function(self) -> F {
         self.objective_function
     }
+
+    /// Consumes `self` and update the objective function
+    pub fn set_objective_function<G>(self, objective_function: G) -> Sampler<G> {
+        let dim = self.dim;
+        let population_size = self.population_size;
+        let rng = self.rng;
+        let function_evals = self.function_evals;
+        Sampler {
+            dim,
+            population_size,
+            rng,
+            objective_function,
+            function_evals,
+        }
+    }
 }
 
 impl<F: ObjectiveFunction> Sampler<F> {
